@@ -10,10 +10,20 @@ Requisitos: **.NET 8 SDK** (ou Visual Studio 2022 com a carga de trabalho "Desen
 dotnet run --project ListaTarefas
 ```
 
-No Visual Studio, abra `ListaTarefas/ListaTarefas.csproj` e pressione F5.
+No Visual Studio, abra `ListaTarefas.sln` e pressione F5.
 
 O banco é criado automaticamente no primeiro uso, em `%LocalAppData%\ListaTarefas\tarefas.db`
 (o log de erros técnicos fica em `erros.log` na mesma pasta). Não é preciso instalar servidor de banco.
+
+## Testes
+
+```bash
+dotnet test
+```
+
+`ListaTarefas.Tests` usa xUnit e um banco SQLite temporário por teste. Cobre as regras de negócio, a ordenação
+(`Mover`), a conclusão/reabertura, a gravação literal de texto com SQL malicioso (parâmetros) e a conversão de falhas
+do banco em `AcessoDadosException`.
 
 ## Uso e atalhos
 
@@ -40,6 +50,7 @@ ListaTarefas/
   Infra/        PastaDeDados, LogErros
   Forms/        MainForm, TarefaForm, ExecutorSeguro      (somente interface)
   Program.cs    raiz de composição (monta as camadas)
+ListaTarefas.Tests/   testes automatizados (xUnit)
 ```
 
 Dependência: `Forms → Services → Data`. Os formulários não têm SQL nem regras de negócio.

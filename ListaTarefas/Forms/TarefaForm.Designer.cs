@@ -1,8 +1,9 @@
+#nullable disable
 namespace ListaTarefas.Forms;
 
 partial class TarefaForm
 {
-    private System.ComponentModel.IContainer? components = null;
+    private System.ComponentModel.IContainer components = null;
 
     protected override void Dispose(bool disposing)
     {
@@ -33,6 +34,20 @@ partial class TarefaForm
         tabela.SuspendLayout();
         painelBotoes.SuspendLayout();
         SuspendLayout();
+
+        // nomes dos controles
+        tabela.Name = "tabela";
+        lblTitulo.Name = "lblTitulo";
+        txtTitulo.Name = "txtTitulo";
+        lblDescricao.Name = "lblDescricao";
+        txtDescricao.Name = "txtDescricao";
+        lblDataInicio.Name = "lblDataInicio";
+        mskDataInicio.Name = "mskDataInicio";
+        lblDataFim.Name = "lblDataFim";
+        mskDataFim.Name = "mskDataFim";
+        painelBotoes.Name = "painelBotoes";
+        btnSalvar.Name = "btnSalvar";
+        btnCancelar.Name = "btnCancelar";
 
         // errorProvider
         errorProvider.ContainerControl = this;
@@ -149,6 +164,7 @@ partial class TarefaForm
         MinimizeBox = false;
         ShowInTaskbar = false;
         StartPosition = FormStartPosition.CenterParent;
+        Name = "TarefaForm";
         Text = "Tarefa";
 
         ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();

@@ -1,8 +1,9 @@
+#nullable disable
 namespace ListaTarefas.Forms;
 
 partial class MainForm
 {
-    private System.ComponentModel.IContainer? components = null;
+    private System.ComponentModel.IContainer components = null;
 
     protected override void Dispose(bool disposing)
     {
@@ -37,6 +38,25 @@ partial class MainForm
         painelTopo.SuspendLayout();
         barraStatus.SuspendLayout();
         SuspendLayout();
+
+        // nomes dos controles
+        dgvTarefas.Name = "dgvTarefas";
+        colConcluida.Name = "colConcluida";
+        colTitulo.Name = "colTitulo";
+        colDataInicio.Name = "colDataInicio";
+        colDataFim.Name = "colDataFim";
+        colSituacao.Name = "colSituacao";
+        painelBotoes.Name = "painelBotoes";
+        btnNova.Name = "btnNova";
+        btnEditar.Name = "btnEditar";
+        btnConcluir.Name = "btnConcluir";
+        btnExcluir.Name = "btnExcluir";
+        btnSubir.Name = "btnSubir";
+        btnDescer.Name = "btnDescer";
+        painelTopo.Name = "painelTopo";
+        chkMostrarConcluidas.Name = "chkMostrarConcluidas";
+        barraStatus.Name = "barraStatus";
+        lblResumo.Name = "lblResumo";
 
         // dgvTarefas
         dgvTarefas.AllowUserToAddRows = false;
@@ -167,6 +187,7 @@ partial class MainForm
         Controls.Add(barraStatus);
         MinimumSize = new Size(900, 400);
         StartPosition = FormStartPosition.CenterScreen;
+        Name = "MainForm";
         Text = "Lista de Tarefas";
         Load += MainForm_Load;
 

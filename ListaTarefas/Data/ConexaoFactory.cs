@@ -30,6 +30,12 @@ public sealed class ConexaoFactory
         }
     }
 
+    /// <summary>Usa uma connection string já pronta (testes automatizados).</summary>
+    public ConexaoFactory(string stringConexao)
+    {
+        _stringConexao = stringConexao;
+    }
+
     /// <summary>Devolve uma conexão fechada; quem chama abre e descarta com <c>using</c>.</summary>
     public SqliteConnection CriarConexao() => new(_stringConexao);
 }

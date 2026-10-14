@@ -24,9 +24,9 @@ partial class TarefaForm
         lblDescricao = new Label();
         txtDescricao = new TextBox();
         lblDataInicio = new Label();
-        mskDataInicio = new MaskedTextBox();
+        dtpDataInicio = new DateTimePicker();
         lblDataFim = new Label();
-        mskDataFim = new MaskedTextBox();
+        dtpDataFim = new DateTimePicker();
         painelBotoes = new FlowLayoutPanel();
         btnSalvar = new Button();
         btnCancelar = new Button();
@@ -42,9 +42,9 @@ partial class TarefaForm
         lblDescricao.Name = "lblDescricao";
         txtDescricao.Name = "txtDescricao";
         lblDataInicio.Name = "lblDataInicio";
-        mskDataInicio.Name = "mskDataInicio";
+        dtpDataInicio.Name = "dtpDataInicio";
         lblDataFim.Name = "lblDataFim";
-        mskDataFim.Name = "mskDataFim";
+        dtpDataFim.Name = "dtpDataFim";
         painelBotoes.Name = "painelBotoes";
         btnSalvar.Name = "btnSalvar";
         btnCancelar.Name = "btnCancelar";
@@ -70,9 +70,9 @@ partial class TarefaForm
         tabela.Controls.Add(lblDescricao, 0, 1);
         tabela.Controls.Add(txtDescricao, 1, 1);
         tabela.Controls.Add(lblDataInicio, 0, 2);
-        tabela.Controls.Add(mskDataInicio, 1, 2);
+        tabela.Controls.Add(dtpDataInicio, 1, 2);
         tabela.Controls.Add(lblDataFim, 0, 3);
-        tabela.Controls.Add(mskDataFim, 1, 3);
+        tabela.Controls.Add(dtpDataFim, 1, 3);
         tabela.Controls.Add(painelBotoes, 0, 4);
         tabela.SetColumnSpan(painelBotoes, 2);
         tabela.TabIndex = 0;
@@ -103,32 +103,34 @@ partial class TarefaForm
         txtDescricao.TabIndex = 3;
 
         // lblDataInicio
-        lblDataInicio.Text = "Data &início:";
+        lblDataInicio.Text = "Data de &início:";
         lblDataInicio.AutoSize = true;
         lblDataInicio.Anchor = AnchorStyles.Left;
         lblDataInicio.TabIndex = 4;
 
-        // mskDataInicio
-        mskDataInicio.Mask = "00/00/0000";
-        mskDataInicio.Culture = System.Globalization.CultureInfo.InvariantCulture;
-        mskDataInicio.Anchor = AnchorStyles.Left;
-        mskDataInicio.Width = 100;
-        mskDataInicio.TabIndex = 5;
-        mskDataInicio.Validating += mskDataInicio_Validating;
+        // dtpDataInicio (a caixa de seleção à esquerda torna a data opcional)
+        dtpDataInicio.Format = DateTimePickerFormat.Custom;
+        dtpDataInicio.CustomFormat = "dd/MM/yyyy";
+        dtpDataInicio.ShowCheckBox = true;
+        dtpDataInicio.Checked = false;
+        dtpDataInicio.Anchor = AnchorStyles.Left;
+        dtpDataInicio.Width = 140;
+        dtpDataInicio.TabIndex = 5;
 
         // lblDataFim
-        lblDataFim.Text = "Data &fim:";
+        lblDataFim.Text = "Data de &término:";
         lblDataFim.AutoSize = true;
         lblDataFim.Anchor = AnchorStyles.Left;
         lblDataFim.TabIndex = 6;
 
-        // mskDataFim
-        mskDataFim.Mask = "00/00/0000";
-        mskDataFim.Culture = System.Globalization.CultureInfo.InvariantCulture;
-        mskDataFim.Anchor = AnchorStyles.Left;
-        mskDataFim.Width = 100;
-        mskDataFim.TabIndex = 7;
-        mskDataFim.Validating += mskDataFim_Validating;
+        // dtpDataFim
+        dtpDataFim.Format = DateTimePickerFormat.Custom;
+        dtpDataFim.CustomFormat = "dd/MM/yyyy";
+        dtpDataFim.ShowCheckBox = true;
+        dtpDataFim.Checked = false;
+        dtpDataFim.Anchor = AnchorStyles.Left;
+        dtpDataFim.Width = 140;
+        dtpDataFim.TabIndex = 7;
 
         // painelBotoes
         painelBotoes.AutoSize = true;
@@ -181,9 +183,9 @@ partial class TarefaForm
     private Label lblDescricao;
     private TextBox txtDescricao;
     private Label lblDataInicio;
-    private MaskedTextBox mskDataInicio;
+    private DateTimePicker dtpDataInicio;
     private Label lblDataFim;
-    private MaskedTextBox mskDataFim;
+    private DateTimePicker dtpDataFim;
     private FlowLayoutPanel painelBotoes;
     private Button btnSalvar;
     private Button btnCancelar;

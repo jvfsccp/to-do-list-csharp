@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Globalization;
 using ListaTarefas.Models;
 using ListaTarefas.Services;
 
@@ -8,8 +7,6 @@ namespace ListaTarefas.Forms;
 /// <summary>Cadastro/edição de tarefa. Valida o formato dos campos; as regras de negócio ficam no serviço.</summary>
 public partial class TarefaForm : Form
 {
-    private const string FormatoData = "dd/MM/yyyy";
-
     private readonly TarefaService _service;
     private readonly Tarefa? _tarefaOriginal;
 
@@ -38,20 +35,31 @@ public partial class TarefaForm : Form
     {
         txtTitulo.Text = tarefa.Titulo;
         txtDescricao.Text = tarefa.Descricao;
-        mskDataInicio.Text = tarefa.DataInicio?.ToString(FormatoData, CultureInfo.InvariantCulture);
-        mskDataFim.Text = tarefa.DataFim?.ToString(FormatoData, CultureInfo.InvariantCulture);
+        DefinirData(dtpDataInicio, tarefa.DataInicio);
+        DefinirData(dtpDataFim, tarefa.DataFim);
     }
+
+    /// <summary>Data opcional: a caixa de seleção do picker desmarcada significa "sem data".</summary>
+    private static void DefinirData(DateTimePicker campo, DateTime? data)
+    {
+        if (data.HasValue)
+        {
+            campo.Value = data.Value;
+            campo.Checked = true;
+        }
+        else
+        {
+            campo.Checked = false;
+        }
+    }
+
+    private static DateTime? LerData(DateTimePicker campo) => campo.Checked ? campo.Value.Date : null;
 
     private void btnSalvar_Click(object? sender, EventArgs e)
     {
-        // Operador & (sem curto-circuito) para sinalizar todos os campos inválidos de uma vez.
-        bool camposValidos = ValidarTitulo()
-            & ValidarData(mskDataInicio, out DateTime? dataInicio)
-            & ValidarData(mskDataFim, out DateTime? dataFim);
-
-        if (!camposValidos)
+        if (!ValidarTitulo())
         {
-            FocarPrimeiroCampoInvalido();
+            txtTitulo.Focus();
             return;
         }
 
@@ -60,8 +68,8 @@ public partial class TarefaForm : Form
             Id = _tarefaOriginal?.Id ?? 0,
             Titulo = txtTitulo.Text,
             Descricao = txtDescricao.Text,
-            DataInicio = dataInicio,
-            DataFim = dataFim
+            DataInicio = LerData(dtpDataInicio),
+            DataFim = LerData(dtpDataFim)
         };
 
         if (!ExecutorSeguro.Executar(this, () => _service.Salvar(tarefa)))
@@ -75,50 +83,10 @@ public partial class TarefaForm : Form
 
     private void txtTitulo_Validating(object? sender, CancelEventArgs e) => e.Cancel = !ValidarTitulo();
 
-    private void mskDataInicio_Validating(object? sender, CancelEventArgs e) =>
-        e.Cancel = !ValidarData(mskDataInicio, out _);
-
-    private void mskDataFim_Validating(object? sender, CancelEventArgs e) =>
-        e.Cancel = !ValidarData(mskDataFim, out _);
-
     private bool ValidarTitulo()
     {
         bool valido = !string.IsNullOrWhiteSpace(txtTitulo.Text);
         errorProvider.SetError(txtTitulo, valido ? string.Empty : "Informe o título da tarefa.");
         return valido;
-    }
-
-    /// <summary>Campo vazio é válido (data opcional); preenchido precisa ser uma data real dd/MM/aaaa.</summary>
-    private bool ValidarData(MaskedTextBox campo, out DateTime? data)
-    {
-        data = null;
-        errorProvider.SetError(campo, string.Empty);
-
-        if (campo.MaskedTextProvider?.AssignedEditPositionCount == 0)
-        {
-            return true;
-        }
-
-        if (!DateTime.TryParseExact(campo.Text, FormatoData, CultureInfo.InvariantCulture,
-                DateTimeStyles.None, out DateTime valor))
-        {
-            errorProvider.SetError(campo, "Data inválida. Use o formato dd/mm/aaaa.");
-            return false;
-        }
-
-        data = valor;
-        return true;
-    }
-
-    private void FocarPrimeiroCampoInvalido()
-    {
-        foreach (Control campo in new Control[] { txtTitulo, mskDataInicio, mskDataFim })
-        {
-            if (!string.IsNullOrEmpty(errorProvider.GetError(campo)))
-            {
-                campo.Focus();
-                return;
-            }
-        }
     }
 }

@@ -34,9 +34,18 @@ do banco em `AcessoDadosException`.
 | Concluir / reabrir | `Ctrl+Enter` ou clique na caixa "Feito" |
 | Excluir | `Del` |
 | Subir / descer na lista | `Ctrl+↑` / `Ctrl+↓` |
+| Mostrar / ocultar concluídas | `Ctrl+H` |
+| Atualizar a lista | `F5` |
+
+Todas as ações ficam no topo da janela, no padrão dos aplicativos Windows: a barra de menus (Arquivo, Editar,
+Visualizar, Ajuda) e, logo abaixo, a barra de ferramentas com as ações mais usadas. Os atalhos acima estão nos itens
+de menu, e as teclas de acesso (`Alt+letra`) abrem cada menu.
+
+Nos campos de data do cadastro há um seletor de data (calendário). A caixa de seleção ao lado da data a torna
+opcional: desmarcada, a tarefa fica sem data.
 
 Tarefas atrasadas (data de término anterior a hoje e não concluídas) aparecem em vermelho. Concluídas ficam ocultas
-por padrão; marque "Mostrar concluídas" para vê-las.
+por padrão; use "Visualizar → Mostrar tarefas concluídas" para vê-las.
 
 ## Arquitetura
 
@@ -63,9 +72,9 @@ Dependência: `Forms → Services → Data`. Os formulários não têm SQL nem r
 | Parâmetros contra SQL Injection | Todas as consultas em `Data/TarefaRepository.cs` usam `@parametros` |
 | Ciclo de vida das conexões | `using` + `Open()` por operação em `TarefaRepository.Consultar` |
 | Transações | `TarefaRepository.Mover` (troca de posição = dois `UPDATE` atômicos) |
-| Validação de formato | `Forms/TarefaForm.cs`: `ErrorProvider`, `MaskedTextBox` e `DateTime.TryParseExact` |
+| Validação de formato | `Forms/TarefaForm.cs`: `ErrorProvider` no título; datas por `DateTimePicker` (só aceita data válida, sem texto livre) |
 | Validação de regras de negócio | `Services/TarefaService.Validar` (título obrigatório, tamanhos, término ≥ início) |
 | Tratamento de exceções | `SqliteException` capturada no repositório e convertida em `AcessoDadosException` (mensagem amigável, erro técnico no log); `ExecutorSeguro` exibe a mensagem sem pilha |
 | Configuração segura | Connection string em `appsettings.json`; nenhuma credencial no código (SQLite não usa senha) |
 | Ergonomia | `TabIndex` ordenado, foco inicial no título, teclas de acesso (`&`), `AcceptButton`/`CancelButton`, atalhos acima |
-| Qualidade do código | Nomes consistentes em português com prefixos de controle (`txt`, `btn`, `dgv`, `msk`, `lbl`) |
+| Qualidade do código | Nomes consistentes em português com prefixos de controle (`txt`, `dtp`, `dgv`, `mnu`, `tsb`, `btn`, `lbl`) |

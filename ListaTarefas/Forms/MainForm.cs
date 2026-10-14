@@ -21,38 +21,24 @@ public partial class MainForm : Form
 
     private Tarefa? TarefaSelecionada => dgvTarefas.CurrentRow?.DataBoundItem as Tarefa;
 
+    private bool MostrarConcluidas => mnuMostrarConcluidas.Checked;
+
     private void MainForm_Load(object? sender, EventArgs e)
     {
         CarregarLista();
         dgvTarefas.Focus();
     }
 
+    /// <summary>Enter na grade edita a tarefa; os demais atalhos são dos itens de menu.</summary>
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
     {
-        switch (keyData)
+        if (keyData == Keys.Enter && dgvTarefas.Focused)
         {
-            case Keys.Control | Keys.N:
-                btnNova.PerformClick();
-                return true;
-            case Keys.F2:
-            case Keys.Enter when dgvTarefas.Focused:
-                btnEditar.PerformClick();
-                return true;
-            case Keys.Control | Keys.Enter:
-                btnConcluir.PerformClick();
-                return true;
-            case Keys.Delete:
-                btnExcluir.PerformClick();
-                return true;
-            case Keys.Control | Keys.Up:
-                btnSubir.PerformClick();
-                return true;
-            case Keys.Control | Keys.Down:
-                btnDescer.PerformClick();
-                return true;
-            default:
-                return base.ProcessCmdKey(ref msg, keyData);
+            EditarSelecionada();
+            return true;
         }
+
+        return base.ProcessCmdKey(ref msg, keyData);
     }
 
     /// <summary>Recarrega a grade mantendo a seleção na tarefa informada (ou na posição mais próxima).</summary>
@@ -62,12 +48,12 @@ public partial class MainForm : Form
         int indiceAnterior = dgvTarefas.CurrentRow?.Index ?? 0;
 
         IReadOnlyList<Tarefa> tarefas = Array.Empty<Tarefa>();
-        ExecutorSeguro.Executar(this, () => tarefas = _service.Listar(chkMostrarConcluidas.Checked));
+        ExecutorSeguro.Executar(this, () => tarefas = _service.Listar(MostrarConcluidas));
 
         dgvTarefas.DataSource = tarefas.ToList();
         SelecionarLinha(idSelecionado, indiceAnterior);
         AtualizarResumo(tarefas);
-        AtualizarBotoes();
+        AtualizarAcoes();
     }
 
     private void SelecionarLinha(int? id, int indiceAlternativo)
@@ -94,18 +80,22 @@ public partial class MainForm : Form
         lblResumo.Text = $"{pendentes} pendente(s) · {atrasadas} atrasada(s)";
     }
 
-    private void AtualizarBotoes()
+    /// <summary>Habilita/desabilita as ações (menu e barra de ferramentas) conforme a seleção.</summary>
+    private void AtualizarAcoes()
     {
         Tarefa? tarefa = TarefaSelecionada;
         bool temSelecao = tarefa is not null;
         bool pendente = temSelecao && !tarefa!.Concluida;
 
-        btnEditar.Enabled = temSelecao;
-        btnExcluir.Enabled = temSelecao;
-        btnConcluir.Enabled = temSelecao;
-        btnSubir.Enabled = pendente;
-        btnDescer.Enabled = pendente;
-        btnConcluir.Text = temSelecao && tarefa!.Concluida ? "&Reabrir (Ctrl+Enter)" : "Con&cluir (Ctrl+Enter)";
+        mnuEditarTarefa.Enabled = tsbEditar.Enabled = temSelecao;
+        mnuExcluir.Enabled = tsbExcluir.Enabled = temSelecao;
+        mnuConcluir.Enabled = tsbConcluir.Enabled = temSelecao;
+        mnuSubir.Enabled = tsbSubir.Enabled = pendente;
+        mnuDescer.Enabled = tsbDescer.Enabled = pendente;
+
+        bool reabrir = temSelecao && tarefa!.Concluida;
+        mnuConcluir.Text = reabrir ? "&Reabrir tarefa" : "C&oncluir tarefa";
+        tsbConcluir.Text = reabrir ? "Reabrir" : "Concluir";
     }
 
     private void AbrirFormulario(Tarefa? tarefa)
@@ -114,6 +104,14 @@ public partial class MainForm : Form
         if (formulario.ShowDialog(this) == DialogResult.OK)
         {
             CarregarLista(formulario.TarefaSalva?.Id);
+        }
+    }
+
+    private void EditarSelecionada()
+    {
+        if (TarefaSelecionada is { } tarefa)
+        {
+            AbrirFormulario(tarefa);
         }
     }
 
@@ -139,17 +137,11 @@ public partial class MainForm : Form
         }
     }
 
-    private void btnNova_Click(object? sender, EventArgs e) => AbrirFormulario(null);
+    private void NovaTarefa_Click(object? sender, EventArgs e) => AbrirFormulario(null);
 
-    private void btnEditar_Click(object? sender, EventArgs e)
-    {
-        if (TarefaSelecionada is { } tarefa)
-        {
-            AbrirFormulario(tarefa);
-        }
-    }
+    private void EditarTarefa_Click(object? sender, EventArgs e) => EditarSelecionada();
 
-    private void btnConcluir_Click(object? sender, EventArgs e)
+    private void AlternarConclusao_Click(object? sender, EventArgs e)
     {
         if (TarefaSelecionada is { } tarefa)
         {
@@ -157,7 +149,7 @@ public partial class MainForm : Form
         }
     }
 
-    private void btnExcluir_Click(object? sender, EventArgs e)
+    private void ExcluirTarefa_Click(object? sender, EventArgs e)
     {
         if (TarefaSelecionada is not { } tarefa)
         {
@@ -175,11 +167,44 @@ public partial class MainForm : Form
         }
     }
 
-    private void btnSubir_Click(object? sender, EventArgs e) => MoverSelecionada(DirecaoMovimento.Cima);
+    private void SubirTarefa_Click(object? sender, EventArgs e) => MoverSelecionada(DirecaoMovimento.Cima);
 
-    private void btnDescer_Click(object? sender, EventArgs e) => MoverSelecionada(DirecaoMovimento.Baixo);
+    private void DescerTarefa_Click(object? sender, EventArgs e) => MoverSelecionada(DirecaoMovimento.Baixo);
 
-    private void chkMostrarConcluidas_CheckedChanged(object? sender, EventArgs e) => CarregarLista();
+    /// <summary>Menu e barra de ferramentas têm um botão "mostrar concluídas" cada; mantém os dois em sincronia.</summary>
+    private void MostrarConcluidas_Click(object? sender, EventArgs e)
+    {
+        bool marcado = sender is ToolStripButton botao ? botao.Checked : mnuMostrarConcluidas.Checked;
+        mnuMostrarConcluidas.Checked = marcado;
+        tsbMostrarConcluidas.Checked = marcado;
+        CarregarLista();
+    }
+
+    private void Atualizar_Click(object? sender, EventArgs e) => CarregarLista();
+
+    private void mnuSair_Click(object? sender, EventArgs e) => Close();
+
+    private void mnuAtalhos_Click(object? sender, EventArgs e)
+    {
+        MessageBox.Show(
+            this,
+            "Ctrl+N\tNova tarefa\n" +
+            "F2 / Enter\tEditar tarefa\n" +
+            "Ctrl+Enter\tConcluir ou reabrir\n" +
+            "Del\tExcluir tarefa\n" +
+            "Ctrl+↑ / Ctrl+↓\tMover para cima / para baixo\n" +
+            "Ctrl+H\tMostrar ou ocultar concluídas\n" +
+            "F5\tAtualizar a lista",
+            "Atalhos de teclado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+    }
+
+    private void mnuSobre_Click(object? sender, EventArgs e)
+    {
+        MessageBox.Show(
+            this,
+            "Lista de Tarefas\nAplicação desktop em C# (Windows Forms) com banco de dados SQLite.",
+            "Sobre", MessageBoxButtons.OK, MessageBoxIcon.Information);
+    }
 
     private void dgvTarefas_CellContentClick(object? sender, DataGridViewCellEventArgs e)
     {
@@ -194,11 +219,11 @@ public partial class MainForm : Form
     {
         if (e.RowIndex >= 0 && e.ColumnIndex != colConcluida.Index)
         {
-            btnEditar.PerformClick();
+            EditarSelecionada();
         }
     }
 
-    private void dgvTarefas_SelectionChanged(object? sender, EventArgs e) => AtualizarBotoes();
+    private void dgvTarefas_SelectionChanged(object? sender, EventArgs e) => AtualizarAcoes();
 
     /// <summary>Destaca as tarefas atrasadas (vermelho) e risca as concluídas (cinza).</summary>
     private void dgvTarefas_DataBindingComplete(object? sender, DataGridViewBindingCompleteEventArgs e)

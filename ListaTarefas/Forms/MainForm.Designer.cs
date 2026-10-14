@@ -22,20 +22,43 @@ partial class MainForm
         colDataInicio = new DataGridViewTextBoxColumn();
         colDataFim = new DataGridViewTextBoxColumn();
         colSituacao = new DataGridViewTextBoxColumn();
-        painelBotoes = new FlowLayoutPanel();
-        btnNova = new Button();
-        btnEditar = new Button();
-        btnConcluir = new Button();
-        btnExcluir = new Button();
-        btnSubir = new Button();
-        btnDescer = new Button();
-        painelTopo = new Panel();
-        chkMostrarConcluidas = new CheckBox();
+
+        menuPrincipal = new MenuStrip();
+        mnuArquivo = new ToolStripMenuItem();
+        mnuNovaTarefa = new ToolStripMenuItem();
+        mnuSeparadorArquivo = new ToolStripSeparator();
+        mnuSair = new ToolStripMenuItem();
+        mnuEditar = new ToolStripMenuItem();
+        mnuEditarTarefa = new ToolStripMenuItem();
+        mnuConcluir = new ToolStripMenuItem();
+        mnuExcluir = new ToolStripMenuItem();
+        mnuSeparadorEditar = new ToolStripSeparator();
+        mnuSubir = new ToolStripMenuItem();
+        mnuDescer = new ToolStripMenuItem();
+        mnuVisualizar = new ToolStripMenuItem();
+        mnuMostrarConcluidas = new ToolStripMenuItem();
+        mnuAtualizar = new ToolStripMenuItem();
+        mnuAjuda = new ToolStripMenuItem();
+        mnuAtalhos = new ToolStripMenuItem();
+        mnuSobre = new ToolStripMenuItem();
+
+        barraFerramentas = new ToolStrip();
+        tsbNova = new ToolStripButton();
+        tsbEditar = new ToolStripButton();
+        tsbConcluir = new ToolStripButton();
+        tsbExcluir = new ToolStripButton();
+        tssAcoes = new ToolStripSeparator();
+        tsbSubir = new ToolStripButton();
+        tsbDescer = new ToolStripButton();
+        tssOrdem = new ToolStripSeparator();
+        tsbMostrarConcluidas = new ToolStripButton();
+
         barraStatus = new StatusStrip();
         lblResumo = new ToolStripStatusLabel();
+
         ((System.ComponentModel.ISupportInitialize)dgvTarefas).BeginInit();
-        painelBotoes.SuspendLayout();
-        painelTopo.SuspendLayout();
+        menuPrincipal.SuspendLayout();
+        barraFerramentas.SuspendLayout();
         barraStatus.SuspendLayout();
         SuspendLayout();
 
@@ -46,17 +69,145 @@ partial class MainForm
         colDataInicio.Name = "colDataInicio";
         colDataFim.Name = "colDataFim";
         colSituacao.Name = "colSituacao";
-        painelBotoes.Name = "painelBotoes";
-        btnNova.Name = "btnNova";
-        btnEditar.Name = "btnEditar";
-        btnConcluir.Name = "btnConcluir";
-        btnExcluir.Name = "btnExcluir";
-        btnSubir.Name = "btnSubir";
-        btnDescer.Name = "btnDescer";
-        painelTopo.Name = "painelTopo";
-        chkMostrarConcluidas.Name = "chkMostrarConcluidas";
+        menuPrincipal.Name = "menuPrincipal";
+        mnuArquivo.Name = "mnuArquivo";
+        mnuNovaTarefa.Name = "mnuNovaTarefa";
+        mnuSeparadorArquivo.Name = "mnuSeparadorArquivo";
+        mnuSair.Name = "mnuSair";
+        mnuEditar.Name = "mnuEditar";
+        mnuEditarTarefa.Name = "mnuEditarTarefa";
+        mnuConcluir.Name = "mnuConcluir";
+        mnuExcluir.Name = "mnuExcluir";
+        mnuSeparadorEditar.Name = "mnuSeparadorEditar";
+        mnuSubir.Name = "mnuSubir";
+        mnuDescer.Name = "mnuDescer";
+        mnuVisualizar.Name = "mnuVisualizar";
+        mnuMostrarConcluidas.Name = "mnuMostrarConcluidas";
+        mnuAtualizar.Name = "mnuAtualizar";
+        mnuAjuda.Name = "mnuAjuda";
+        mnuAtalhos.Name = "mnuAtalhos";
+        mnuSobre.Name = "mnuSobre";
+        barraFerramentas.Name = "barraFerramentas";
+        tsbNova.Name = "tsbNova";
+        tsbEditar.Name = "tsbEditar";
+        tsbConcluir.Name = "tsbConcluir";
+        tsbExcluir.Name = "tsbExcluir";
+        tssAcoes.Name = "tssAcoes";
+        tsbSubir.Name = "tsbSubir";
+        tsbDescer.Name = "tsbDescer";
+        tssOrdem.Name = "tssOrdem";
+        tsbMostrarConcluidas.Name = "tsbMostrarConcluidas";
         barraStatus.Name = "barraStatus";
         lblResumo.Name = "lblResumo";
+
+        // menuPrincipal
+        menuPrincipal.Items.AddRange(new ToolStripItem[] { mnuArquivo, mnuEditar, mnuVisualizar, mnuAjuda });
+        menuPrincipal.Dock = DockStyle.Top;
+        menuPrincipal.TabIndex = 3;
+
+        // mnuArquivo
+        mnuArquivo.Text = "&Arquivo";
+        mnuArquivo.DropDownItems.AddRange(new ToolStripItem[] { mnuNovaTarefa, mnuSeparadorArquivo, mnuSair });
+
+        mnuNovaTarefa.Text = "&Nova tarefa";
+        mnuNovaTarefa.ShortcutKeys = Keys.Control | Keys.N;
+        mnuNovaTarefa.Click += NovaTarefa_Click;
+
+        mnuSair.Text = "&Sair";
+        mnuSair.ShortcutKeyDisplayString = "Alt+F4";
+        mnuSair.Click += mnuSair_Click;
+
+        // mnuEditar
+        mnuEditar.Text = "&Editar";
+        mnuEditar.DropDownItems.AddRange(new ToolStripItem[]
+            { mnuEditarTarefa, mnuConcluir, mnuExcluir, mnuSeparadorEditar, mnuSubir, mnuDescer });
+
+        mnuEditarTarefa.Text = "&Editar tarefa";
+        mnuEditarTarefa.ShortcutKeys = Keys.F2;
+        mnuEditarTarefa.Click += EditarTarefa_Click;
+
+        mnuConcluir.Text = "C&oncluir tarefa";
+        mnuConcluir.ShortcutKeys = Keys.Control | Keys.Enter;
+        mnuConcluir.Click += AlternarConclusao_Click;
+
+        mnuExcluir.Text = "E&xcluir tarefa";
+        mnuExcluir.ShortcutKeys = Keys.Delete;
+        mnuExcluir.Click += ExcluirTarefa_Click;
+
+        mnuSubir.Text = "Mover para &cima";
+        mnuSubir.ShortcutKeys = Keys.Control | Keys.Up;
+        mnuSubir.Click += SubirTarefa_Click;
+
+        mnuDescer.Text = "Mover para &baixo";
+        mnuDescer.ShortcutKeys = Keys.Control | Keys.Down;
+        mnuDescer.Click += DescerTarefa_Click;
+
+        // mnuVisualizar
+        mnuVisualizar.Text = "&Visualizar";
+        mnuVisualizar.DropDownItems.AddRange(new ToolStripItem[] { mnuMostrarConcluidas, mnuAtualizar });
+
+        mnuMostrarConcluidas.Text = "&Mostrar tarefas concluídas";
+        mnuMostrarConcluidas.CheckOnClick = true;
+        mnuMostrarConcluidas.ShortcutKeys = Keys.Control | Keys.H;
+        mnuMostrarConcluidas.Click += MostrarConcluidas_Click;
+
+        mnuAtualizar.Text = "&Atualizar";
+        mnuAtualizar.ShortcutKeys = Keys.F5;
+        mnuAtualizar.Click += Atualizar_Click;
+
+        // mnuAjuda
+        mnuAjuda.Text = "Aj&uda";
+        mnuAjuda.DropDownItems.AddRange(new ToolStripItem[] { mnuAtalhos, mnuSobre });
+
+        mnuAtalhos.Text = "&Atalhos de teclado";
+        mnuAtalhos.Click += mnuAtalhos_Click;
+
+        mnuSobre.Text = "&Sobre";
+        mnuSobre.Click += mnuSobre_Click;
+
+        // barraFerramentas
+        barraFerramentas.GripStyle = ToolStripGripStyle.Hidden;
+        barraFerramentas.Dock = DockStyle.Top;
+        barraFerramentas.Padding = new Padding(6, 2, 6, 2);
+        barraFerramentas.Items.AddRange(new ToolStripItem[]
+            { tsbNova, tsbEditar, tsbConcluir, tsbExcluir, tssAcoes, tsbSubir, tsbDescer, tssOrdem, tsbMostrarConcluidas });
+        barraFerramentas.TabIndex = 2;
+
+        tsbNova.Text = "Nova";
+        tsbNova.ToolTipText = "Nova tarefa (Ctrl+N)";
+        tsbNova.DisplayStyle = ToolStripItemDisplayStyle.Text;
+        tsbNova.Click += NovaTarefa_Click;
+
+        tsbEditar.Text = "Editar";
+        tsbEditar.ToolTipText = "Editar tarefa (F2)";
+        tsbEditar.DisplayStyle = ToolStripItemDisplayStyle.Text;
+        tsbEditar.Click += EditarTarefa_Click;
+
+        tsbConcluir.Text = "Concluir";
+        tsbConcluir.ToolTipText = "Concluir ou reabrir (Ctrl+Enter)";
+        tsbConcluir.DisplayStyle = ToolStripItemDisplayStyle.Text;
+        tsbConcluir.Click += AlternarConclusao_Click;
+
+        tsbExcluir.Text = "Excluir";
+        tsbExcluir.ToolTipText = "Excluir tarefa (Del)";
+        tsbExcluir.DisplayStyle = ToolStripItemDisplayStyle.Text;
+        tsbExcluir.Click += ExcluirTarefa_Click;
+
+        tsbSubir.Text = "Subir";
+        tsbSubir.ToolTipText = "Mover para cima (Ctrl+↑)";
+        tsbSubir.DisplayStyle = ToolStripItemDisplayStyle.Text;
+        tsbSubir.Click += SubirTarefa_Click;
+
+        tsbDescer.Text = "Descer";
+        tsbDescer.ToolTipText = "Mover para baixo (Ctrl+↓)";
+        tsbDescer.DisplayStyle = ToolStripItemDisplayStyle.Text;
+        tsbDescer.Click += DescerTarefa_Click;
+
+        tsbMostrarConcluidas.Text = "Mostrar concluídas";
+        tsbMostrarConcluidas.ToolTipText = "Mostrar ou ocultar tarefas concluídas (Ctrl+H)";
+        tsbMostrarConcluidas.CheckOnClick = true;
+        tsbMostrarConcluidas.DisplayStyle = ToolStripItemDisplayStyle.Text;
+        tsbMostrarConcluidas.Click += MostrarConcluidas_Click;
 
         // dgvTarefas
         dgvTarefas.AllowUserToAddRows = false;
@@ -111,68 +262,6 @@ partial class MainForm
         colSituacao.SortMode = DataGridViewColumnSortMode.NotSortable;
         colSituacao.Width = 110;
 
-        // painelBotoes
-        painelBotoes.AutoSize = true;
-        painelBotoes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        painelBotoes.Dock = DockStyle.Bottom;
-        painelBotoes.Padding = new Padding(8, 6, 8, 6);
-        painelBotoes.Controls.Add(btnNova);
-        painelBotoes.Controls.Add(btnEditar);
-        painelBotoes.Controls.Add(btnConcluir);
-        painelBotoes.Controls.Add(btnExcluir);
-        painelBotoes.Controls.Add(btnSubir);
-        painelBotoes.Controls.Add(btnDescer);
-        painelBotoes.TabIndex = 2;
-
-        // btnNova
-        btnNova.Text = "&Nova (Ctrl+N)";
-        btnNova.Size = new Size(125, 32);
-        btnNova.TabIndex = 2;
-        btnNova.Click += btnNova_Click;
-
-        // btnEditar
-        btnEditar.Text = "&Editar (F2)";
-        btnEditar.Size = new Size(110, 32);
-        btnEditar.TabIndex = 3;
-        btnEditar.Click += btnEditar_Click;
-
-        // btnConcluir
-        btnConcluir.Text = "Con&cluir (Ctrl+Enter)";
-        btnConcluir.Size = new Size(160, 32);
-        btnConcluir.TabIndex = 4;
-        btnConcluir.Click += btnConcluir_Click;
-
-        // btnExcluir
-        btnExcluir.Text = "E&xcluir (Del)";
-        btnExcluir.Size = new Size(110, 32);
-        btnExcluir.TabIndex = 5;
-        btnExcluir.Click += btnExcluir_Click;
-
-        // btnSubir
-        btnSubir.Text = "&Subir (Ctrl+↑)";
-        btnSubir.Size = new Size(125, 32);
-        btnSubir.TabIndex = 6;
-        btnSubir.Click += btnSubir_Click;
-
-        // btnDescer
-        btnDescer.Text = "&Descer (Ctrl+↓)";
-        btnDescer.Size = new Size(130, 32);
-        btnDescer.TabIndex = 7;
-        btnDescer.Click += btnDescer_Click;
-
-        // painelTopo
-        painelTopo.Dock = DockStyle.Top;
-        painelTopo.Height = 36;
-        painelTopo.Controls.Add(chkMostrarConcluidas);
-        painelTopo.TabIndex = 1;
-
-        // chkMostrarConcluidas
-        chkMostrarConcluidas.AutoSize = true;
-        chkMostrarConcluidas.Location = new Point(12, 8);
-        chkMostrarConcluidas.Text = "Mostrar c&oncluídas";
-        chkMostrarConcluidas.TabIndex = 1;
-        chkMostrarConcluidas.CheckedChanged += chkMostrarConcluidas_CheckedChanged;
-
         // barraStatus
         barraStatus.Items.Add(lblResumo);
         barraStatus.TabStop = false;
@@ -182,19 +271,21 @@ partial class MainForm
         AutoScaleMode = AutoScaleMode.Dpi;
         ClientSize = new Size(900, 520);
         Controls.Add(dgvTarefas);
-        Controls.Add(painelBotoes);
-        Controls.Add(painelTopo);
         Controls.Add(barraStatus);
-        MinimumSize = new Size(900, 400);
+        Controls.Add(barraFerramentas);
+        Controls.Add(menuPrincipal);
+        MainMenuStrip = menuPrincipal;
+        MinimumSize = new Size(800, 400);
         StartPosition = FormStartPosition.CenterScreen;
         Name = "MainForm";
         Text = "Lista de Tarefas";
         Load += MainForm_Load;
 
         ((System.ComponentModel.ISupportInitialize)dgvTarefas).EndInit();
-        painelBotoes.ResumeLayout(false);
-        painelTopo.ResumeLayout(false);
-        painelTopo.PerformLayout();
+        menuPrincipal.ResumeLayout(false);
+        menuPrincipal.PerformLayout();
+        barraFerramentas.ResumeLayout(false);
+        barraFerramentas.PerformLayout();
         barraStatus.ResumeLayout(false);
         barraStatus.PerformLayout();
         ResumeLayout(false);
@@ -207,15 +298,37 @@ partial class MainForm
     private DataGridViewTextBoxColumn colDataInicio;
     private DataGridViewTextBoxColumn colDataFim;
     private DataGridViewTextBoxColumn colSituacao;
-    private FlowLayoutPanel painelBotoes;
-    private Button btnNova;
-    private Button btnEditar;
-    private Button btnConcluir;
-    private Button btnExcluir;
-    private Button btnSubir;
-    private Button btnDescer;
-    private Panel painelTopo;
-    private CheckBox chkMostrarConcluidas;
+
+    private MenuStrip menuPrincipal;
+    private ToolStripMenuItem mnuArquivo;
+    private ToolStripMenuItem mnuNovaTarefa;
+    private ToolStripSeparator mnuSeparadorArquivo;
+    private ToolStripMenuItem mnuSair;
+    private ToolStripMenuItem mnuEditar;
+    private ToolStripMenuItem mnuEditarTarefa;
+    private ToolStripMenuItem mnuConcluir;
+    private ToolStripMenuItem mnuExcluir;
+    private ToolStripSeparator mnuSeparadorEditar;
+    private ToolStripMenuItem mnuSubir;
+    private ToolStripMenuItem mnuDescer;
+    private ToolStripMenuItem mnuVisualizar;
+    private ToolStripMenuItem mnuMostrarConcluidas;
+    private ToolStripMenuItem mnuAtualizar;
+    private ToolStripMenuItem mnuAjuda;
+    private ToolStripMenuItem mnuAtalhos;
+    private ToolStripMenuItem mnuSobre;
+
+    private ToolStrip barraFerramentas;
+    private ToolStripButton tsbNova;
+    private ToolStripButton tsbEditar;
+    private ToolStripButton tsbConcluir;
+    private ToolStripButton tsbExcluir;
+    private ToolStripSeparator tssAcoes;
+    private ToolStripButton tsbSubir;
+    private ToolStripButton tsbDescer;
+    private ToolStripSeparator tssOrdem;
+    private ToolStripButton tsbMostrarConcluidas;
+
     private StatusStrip barraStatus;
     private ToolStripStatusLabel lblResumo;
 }
